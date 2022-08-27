@@ -4,6 +4,7 @@ const app = express();
 
 const mongoose = require("mongoose");
 const router = require("./chatRoute");
+const welcome = require("./welcome");
 
 app.use(express.json());
 
@@ -15,6 +16,7 @@ mongoose.connect("mongodb://localhost:27017/twiliochat", (err) => {
   }
 });
 
+app.use("/", welcome);
 app.use("/api/v1", router);
 
 app.listen(4000, () => {
