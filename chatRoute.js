@@ -2,6 +2,10 @@ const app = require("express");
 const router = app.Router();
 
 const User = require("./userModel");
+const twilioClient = require("twilio")(
+  process.env.TWILIO_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 const AccessToken = require("twilio").jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
 
