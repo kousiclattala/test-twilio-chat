@@ -1,3 +1,4 @@
+const { json } = require("express");
 const app = require("express");
 const router = app.Router();
 
@@ -8,6 +9,7 @@ const twilioClient = require("twilio")(
 );
 const AccessToken = require("twilio").jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
+const VideoGrant = AccessToken.VideoGrant;
 
 router.get("/getToken/:identity", (req, res) => {
   // Used when generating any kind of tokens
@@ -23,7 +25,9 @@ router.get("/getToken/:identity", (req, res) => {
   const chatGrant = new ChatGrant({
     serviceSid: serviceSid,
   });
-
+  const videoGrant = new VideoGrant({
+    room: "test",
+  });
   // Create an access token which we will sign and return to the client,
   // containing the grant we just created
   const token = new AccessToken(
@@ -34,6 +38,7 @@ router.get("/getToken/:identity", (req, res) => {
   );
 
   token.addGrant(chatGrant);
+  token.addGrant(videoGrant);
 
   // Serialize the token to a JWT string
   // console.log(token.toJwt());
@@ -49,6 +54,25 @@ router.post("/createConversation", (req, res) => {
       res.status(200).json({
         message: "Conversation Created",
         conversation,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Server Error",
+        err,
+      });
+    });
+});
+
+router.post("/createRoom", (req, res) => {
+  const { uniqueName } = req.body;
+
+  twilioClient.video.v1.rooms
+    .create({ uniqueName: uniqueName })
+    .then((room) => {
+      res.status(200).json({
+        message: "Room created",
+        res: room.sid,
       });
     })
     .catch((err) => {
