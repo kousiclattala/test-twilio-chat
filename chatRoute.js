@@ -11,7 +11,7 @@ const AccessToken = require("twilio").jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
 const VideoGrant = AccessToken.VideoGrant;
 
-router.get("/getToken/:identity", (req, res) => {
+router.get("/getToken/:identity/:roomName", (req, res) => {
   // Used when generating any kind of tokens
   const twilioAccountSid = process.env.TWILIO_SID;
   const twilioApiKey = process.env.TWILIO_API_KEY;
@@ -26,7 +26,7 @@ router.get("/getToken/:identity", (req, res) => {
     serviceSid: serviceSid,
   });
   const videoGrant = new VideoGrant({
-    room: "test",
+    room: req.params.roomName,
   });
   // Create an access token which we will sign and return to the client,
   // containing the grant we just created
@@ -72,7 +72,7 @@ router.post("/createRoom", (req, res) => {
     .then((room) => {
       res.status(200).json({
         message: "Room created",
-        res: room.sid,
+        res: room,
       });
     })
     .catch((err) => {
