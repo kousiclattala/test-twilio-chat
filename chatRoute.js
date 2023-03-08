@@ -107,4 +107,79 @@ router.get("/getAllMessages", (req, res) => {
   //
 });
 
+router.post("/requestOTP", (req, res) => {
+  try {
+    const { phoneNumber } = req.body;
+
+    twilioClient.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+      .verifications.create({
+        to: phoneNumber,
+        channel: "sms",
+      })
+      .then((verification) => {
+        console.log(verification);
+        res.status(200).json({
+          status: true,
+          statusCode: 200,
+          message: "OTP sent successfully",
+          data: verification,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({
+          status: false,
+          statusCode: 400,
+          message: "error in sending OTP",
+          data: err,
+        });
+      });
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      statusCode: 400,
+      message: "Error in getting OTP",
+      error,
+    });
+  }
+});
+router.post("/verifyOTP", (req, res) => {
+  try {
+    const { phoneNumber, code } = req.body;
+
+    twilioClient.verify.v2
+      .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+      .verificationChecks.create({
+        to: phoneNumber,
+        code: code,
+      })
+      .then((verification_check) => {
+        console.log(verification_check);
+        res.status(200).json({
+          status: true,
+          statusCode: 200,
+          message: "OTP sent successfully",
+          data: verification_check,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({
+          status: false,
+          statusCode: 400,
+          message: "error in sending OTP",
+          data: err,
+        });
+      });
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      statusCode: 400,
+      message: "Error in getting OTP",
+      error,
+    });
+  }
+});
+
 module.exports = router;
