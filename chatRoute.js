@@ -123,7 +123,10 @@ router.post("/requestOTP", (req, res) => {
           status: true,
           statusCode: 200,
           message: "OTP sent successfully",
-          data: verification,
+          data: {
+            otpStatus: verification.status,
+            isValid: verification.valid,
+          },
         });
       })
       .catch((err) => {
@@ -160,7 +163,10 @@ router.post("/verifyOTP", (req, res) => {
           status: true,
           statusCode: 200,
           message: "OTP sent successfully",
-          data: verification_check,
+          data: {
+            otpStatus: verification_check.status,
+            isValid: verification_check.valid,
+          },
         });
       })
       .catch((err) => {

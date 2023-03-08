@@ -19,6 +19,6 @@ app.use(express.json());
 app.use("/", welcome);
 app.use("/api/v1", router);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on Port ${process.env.PORT}`);
 });
