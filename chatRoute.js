@@ -166,6 +166,7 @@ router.post("/verifyOTP", (req, res) => {
           data: {
             otpStatus: verification_check.status,
             isValid: verification_check.valid,
+            test: true,
           },
         });
       })
